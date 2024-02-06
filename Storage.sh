@@ -33,9 +33,10 @@ Print_Style() {
   printf "%s\n" "${2}$1${NORMAL}"
 }
 
+su root -c "apk add --no-cache --update lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio xxd perl-xml-libxml fstrim lsblk raspberrypi-utils-vcgencmd dpkg"
+
 # Install apk packages
 Install_apk_Package() {
-  su root -c "apk add --no-cache --update lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio xxd perl-xml-libxml fstrim lsblk raspberrypi-utils-vcgencmd"
 #  echo "Install $1"
 #  if [ "$AptUpdated" -ne "1" ]; then
 #    export AptUpdated="1"
@@ -198,12 +199,12 @@ if [ -n "$(which apt)" ]; then
   fi
 
   # Test if we were able to install iozone3 from a package and don't install build-essential if we were
-  if [ -z "$(which iozone)" ]; then
-    Install_apk_Package "build-essential"
-  fi
+#  if [ -z "$(which iozone)" ]; then
+#    Install_apk_Package "build-base"
+#  fi
 
-  DpkgTest=$(dpkg -s libxml-dumper-perl 2>&1 | grep Status | grep installed)
-  if [ -z "$DpkgTest" ]; then Install_apk_Package "libxml-dumper-perl"; fi
+#  DpkgTest=$(dpkg -s libxml-dumper-perl 2>&1 | grep Status | grep installed)
+#  if [ -z "$DpkgTest" ]; then Install_apk_Package "libxml-dumper-perl"; fi
 
 # Next test for Pac-Man (Arch Linux)
 elif [ -n "$(which pacman)" ]; then
