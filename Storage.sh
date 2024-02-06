@@ -1,10 +1,10 @@
 #!/bin/bash
-# Storage benchmark by James A. Chambers (https://jamesachambers.com/)
+# Storage benchmark by Todd Lahman (https://www.toddlahman.com/)
 # Benchmarks your storage and anonymously submits result to https://pibenchmarks.com
 # Results and discussion available at https://jamesachambers.com/2020s-fastest-raspberry-pi-4-storage-sd-ssd-benchmarks/
 #
 # To run the benchmark use the following command:
-# sudo curl https://raw.githubusercontent.com/TheRemote/PiBenchmarks/master/Storage.sh | sudo bash
+# sudo curl https://raw.githubusercontent.com/toddlahman/rPiBenchmarks/master/Storage.sh | sudo bash
 
 # Fix language settings for utf8
 export LC_ALL=C
