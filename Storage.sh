@@ -37,6 +37,7 @@ su root -c "apk add --no-cache --update lshw pciutils usbutils lsscsi bc curl hw
 
 # Install apk packages
 Install_apk_Package() {
+
 #  echo "Install $1"
 #  if [ "$AptUpdated" -ne "1" ]; then
 #    export AptUpdated="1"
@@ -327,7 +328,7 @@ if [ -z "$ChosenPartition" ]; then
 
     for file in /dev/*; do
       DeviceIDP1=$(stat --printf="0x%t" "$file")
-      DeviceIDP2=$(stat --printf="0x%t" "$file")
+      DeviceIDP2=$(stat --printf="0x%T" "$file")
       DeviceID=$(printf "%d:%d" "$DeviceIDP1" "$DeviceIDP2")
       if [ "$DeviceID" = "$RDEV" ]; then
         BootDrive=$file
