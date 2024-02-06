@@ -327,7 +327,7 @@ if [ -z "$ChosenPartition" ]; then
 
     for file in /dev/*; do
       DeviceIDP1=$(stat --printf="0x%t" "$file")
-      DeviceIDP2=$(stat --printf="0x%T" "$file")
+      DeviceIDP2=$(stat --printf="0x%t" "$file")
       DeviceID=$(printf "%d:%d" "$DeviceIDP1" "$DeviceIDP2")
       if [ "$DeviceID" = "$RDEV" ]; then
         BootDrive=$file
