@@ -45,7 +45,7 @@ su root -c "apk add --no-cache --update lshw pciutils usbutils lsscsi bc curl hw
 #  fi
 }
 
-Install_apk_Package()
+Install_apk_Package
 
 # Get binary from string
 Get_Binary() {
@@ -328,7 +328,7 @@ if [ -z "$ChosenPartition" ]; then
 
     for file in /dev/*; do
       DeviceIDP1=$(stat --printf="0x%t" "$file")
-      DeviceIDP2=$(stat --printf="0x%T" "$file")
+      DeviceIDP2=$(stat --printf="0x%t" "$file")
       DeviceID=$(printf "%d:%d" "$DeviceIDP1" "$DeviceIDP2")
       if [ "$DeviceID" = "$RDEV" ]; then
         BootDrive=$file
