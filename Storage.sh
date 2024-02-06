@@ -40,7 +40,7 @@ Install_apk_Package() {
     export AptUpdated="1"
     apk update
 #    apk add lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio sdparm xxd perl-xml-libxml
-    apk add lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio xxd perl-xml-libxml
+    apk add lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio xxd perl-xml-libxml fstrim lsblk
   fi
 }
 
