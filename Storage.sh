@@ -1,7 +1,6 @@
 #!/bin/bash
 # Storage benchmark by Todd Lahman (https://www.toddlahman.com/)
-# Benchmarks your storage and anonymously submits result to https://pibenchmarks.com
-# Results and discussion available at https://jamesachambers.com/2020s-fastest-raspberry-pi-4-storage-sd-ssd-benchmarks/
+# Benchmarks your storage and anonymously submits result to https://pibenchmarks.com/
 #
 # To run the benchmark use the following command:
 # sudo curl https://raw.githubusercontent.com/toddlahman/rPiBenchmarks/master/Storage.sh | sudo bash
@@ -34,15 +33,15 @@ Print_Style() {
   printf "%s\n" "${2}$1${NORMAL}"
 }
 
-# Install apt package
-Install_Apt_Package() {
+# Install apk packages
+Install_apk_Package() {
   echo "Install $1"
   if [ "$AptUpdated" -ne "1" ]; then
     export AptUpdated="1"
-    apt-get update
-    apt-get install lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio sdparm xxd libxml-dumper-perl --no-install-recommends -y
+    apk update
+#    apk add lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio sdparm xxd perl-xml-libxml
+    apk add lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio xxd perl-xml-libxml
   fi
-  apt-get install --no-install-recommends "$1" -y
 }
 
 # Get binary from string
@@ -150,26 +149,26 @@ if [ -n "$(which apt)" ]; then
   # Check if we are on a Raspberry Pi
   if [[ $HostModel == *"Raspberry Pi"* ]]; then
     # Check for vcgencmd (measures clock speeds)
-    if [ -z "$(which vcgencmd)" ]; then Install_Apt_Package "libraspberrypi-bin"; fi
+    if [ -z "$(which vcgencmd)" ]; then Install_apk_Package "libraspberrypi-bin"; fi
   fi
 
   # Retrieve dependencies -- these are all bare minimum system tools to identify the hardware (many will already be built in)
-  if [ -z "$(which lshw)" ]; then Install_Apt_Package "lshw"; fi
-  if [ -z "$(which udevadm)" ]; then Install_Apt_Package "udev"; fi
-  if [ -z "$(which lspci)" ]; then Install_Apt_Package "pciutils"; fi
-  if [ -z "$(which lsusb)" ]; then Install_Apt_Package "usbutils"; fi
-  if [ -z "$(which lsscsi)" ]; then Install_Apt_Package "lsscsi"; fi
-  if [ -z "$(which bc)" ]; then Install_Apt_Package "bc"; fi
-  if [ -z "$(which curl)" ]; then Install_Apt_Package "curl"; fi
-  if [ -z "$(which hwinfo)" ]; then Install_Apt_Package "hwinfo"; fi
-  if [ -z "$(which hdparm)" ]; then Install_Apt_Package "hdparm"; fi
-  if [ -z "$(which dmidecode)" ]; then Install_Apt_Package "dmidecode"; fi
-  if [ -z "$(which fio)" ]; then Install_Apt_Package "fio"; fi
-  if [ -z "$(which iozone)" ]; then Install_Apt_Package "iozone3"; fi
-  if [ -z "$(which nvme)" ]; then Install_Apt_Package "nvme-cli"; fi
-  if [ -z "$(which smartctl)" ]; then Install_Apt_Package "smartmontools"; fi
-  if [ -z "$(which sdparm)" ]; then Install_Apt_Package "sdparm"; fi
-  if [ -z "$(which xxd)" ]; then Install_Apt_Package "xxd"; fi
+#  if [ -z "$(which lshw)" ]; then Install_apk_Package "lshw"; fi
+#  if [ -z "$(which udevadm)" ]; then Install_apk_Package "udev"; fi
+#  if [ -z "$(which lspci)" ]; then Install_apk_Package "pciutils"; fi
+#  if [ -z "$(which lsusb)" ]; then Install_apk_Package "usbutils"; fi
+#  if [ -z "$(which lsscsi)" ]; then Install_apk_Package "lsscsi"; fi
+#  if [ -z "$(which bc)" ]; then Install_apk_Package "bc"; fi
+#  if [ -z "$(which curl)" ]; then Install_apk_Package "curl"; fi
+#  if [ -z "$(which hwinfo)" ]; then Install_apk_Package "hwinfo"; fi
+#  if [ -z "$(which hdparm)" ]; then Install_apk_Package "hdparm"; fi
+#  if [ -z "$(which dmidecode)" ]; then Install_apk_Package "dmidecode"; fi
+#  if [ -z "$(which fio)" ]; then Install_apk_Package "fio"; fi
+#  if [ -z "$(which iozone)" ]; then Install_apk_Package "iozone3"; fi
+#  if [ -z "$(which nvme)" ]; then Install_apk_Package "nvme-cli"; fi
+#  if [ -z "$(which smartctl)" ]; then Install_apk_Package "smartmontools"; fi
+#  if [ -z "$(which sdparm)" ]; then Install_apk_Package "sdparm"; fi
+#  if [ -z "$(which xxd)" ]; then Install_apk_Package "xxd"; fi
 
   DpkgArch=$(dpkg --print-architecture)
   if [ -z "$(which iozone)" ]; then
@@ -199,11 +198,11 @@ if [ -n "$(which apt)" ]; then
 
   # Test if we were able to install iozone3 from a package and don't install build-essential if we were
   if [ -z "$(which iozone)" ]; then
-    Install_Apt_Package "build-essential"
+    Install_apk_Package "build-essential"
   fi
 
   DpkgTest=$(dpkg -s libxml-dumper-perl 2>&1 | grep Status | grep installed)
-  if [ -z "$DpkgTest" ]; then Install_Apt_Package "libxml-dumper-perl"; fi
+  if [ -z "$DpkgTest" ]; then Install_apk_Package "libxml-dumper-perl"; fi
 
 # Next test for Pac-Man (Arch Linux)
 elif [ -n "$(which pacman)" ]; then
@@ -220,7 +219,7 @@ elif [ -n "$(which pacman)" ]; then
     pciutils \
     usbutils \
     nvme-cli \
-    sdparm \
+#    sdparm \
     vim
 
   # Install iozone
@@ -400,7 +399,7 @@ Test_hwinfo=$(hwinfo --arch --bios --block --bridge --disk --framebuffer --gfxca
 Test_nvme=$(nvme list -o json 2>&1 | sed 's/\x0//g')
 Test_nvme+=$(nvme show-regs "$BootDrive" -H 2>&1 | sed 's/;/!/g' | sed 's/\x0//g')
 Test_smartctl=$(smartctl -x "$BootDrive" 2>&1 | sed 's/;/!/g' | sed '/^[[:space:]]*$/d')
-Test_sdparm=$(sudo sdparm --long --verbose "$BootDrive" 2>&1 | sed 's/;/!/g' | sed '/^[[:space:]]*$/d')
+#Test_sdparm=$(sudo sdparm --long --verbose "$BootDrive" 2>&1 | sed 's/;/!/g' | sed '/^[[:space:]]*$/d')
 Capacity=$(lsblk -l 2>&1 | grep "$BootDriveSuffix" -m 1 | awk 'NR==1{ print $4 }' | sed 's/,/./g')
 Print_Style "Additional hardware identification tests completed." "$YELLOW"
 
@@ -918,8 +917,9 @@ tmpHwinfo=$(echo -e "$Test_hwinfo" >tmphwinfo)
 tmpDmi=$(echo -e "$Test_dmidecode" >tmpdmi)
 tmpDmesg=$(echo -e "$Test_dmesg" >tmpdmesg)
 tmpSmart=$(echo -e "$Test_smartctl" >tmpsmart)
-tmpParm=$(echo -e "$Test_sdparm" >tmpparm)
-Submit=$(curl -s -k -L --form "form_tools_form_id=1" --form "DDTest=$DDWrite" --form "DDWriteSpeed=$DDWriteResult" --form "HDParmDisk=$HDParmDisk" --form "HDParmCached=$HDParmCached" --form "HDParm=$HDParm" --form "fio4kRandRead=$fio4kRandRead" --form "fio4kRandWrite=$fio4kRandWrite" --form "fio4kRandWriteIOPS=$fio4kRandWriteIOPS" --form "fio4kRandReadIOPS=$fio4kRandReadIOPS" --form "fio4kRandWriteSpeed=$fio4kRandWriteSpeed" --form "fio4kRandReadSpeed=$fio4kRandReadSpeed" --form "IOZone=$IOZone" --form "IO4kRandRead=$IO4kRandRead" --form "IO4kRandWrite=$IO4kRandWrite" --form "IO4kRead=$IO4kRead" --form "IO4kWrite=$IO4kWrite" --form "Drive=$BootDrive" --form "Test_hdparm=$Test_hdparm" --form "Test_lsblk=$Test_lsblk" --form "Test_findmnt=$Test_findmnt" --form "Test_lsusb=$Test_lsusb" --form "Test_lshw=<tmplshw" --form "Test_lspci=$Test_lspci" --form "Test_lsscsi=$Test_lsscsi" --form "Test_lscpu=$Test_lscpu" --form "Test_diskbyid=$Test_diskbyid" --form "Test_df=$Test_df" --form "Test_cpuinfo=$Test_cpuinfo" --form "Test_udevadm=<tmpudev" --form "Test_dmesg=<tmpdmesg" --form "Test_fstab=$Test_fstab" --form "Test_inxi=<tmpinxi" --form "Test_hwinfo=<tmphwinfo" --form "Test_dmidecode=<tmpdmi" --form "Test_nvme=$Test_nvme" --form "Test_smartctl=<tmpsmart" --form "Model=$Model" --form "Capacity=$Capacity" --form "Manufacturer=$Manufacturer" --form "Product=$Product" --form "DateManufactured=$DateManufactured" --form "Note=$Brand" --form "Class=$Class" --form "OCR=$OCR" --form "SSR=$SSR" --form "SCR=$SCR" --form "CID=$CID" --form "CSD=$CSD" --form "UserAlias=$UserAlias" --form "HostModel=$HostModel" --form "HostSDClock=$HostSDClock" --form "HostConfig=$HostConfig" --form "HostCPUClock=$HostCPUClock" --form "HostCoreClock=$HostCoreClock" --form "HostRAMClock=$HostRAMClock" --form "HostArchitecture=$HostArchitecture" --form "HostOS=$HostOS" --form "HostOSInfo=$HostOSInfo" --form "HostManufacturer=$HostManufacturer" --form "Test_sdparm=<tmpparm" https://pibenchmarks.com/formtools/process.php)
+#tmpParm=$(echo -e "$Test_sdparm" >tmpparm)
+#Submit=$(curl -s -k -L --form "form_tools_form_id=1" --form "DDTest=$DDWrite" --form "DDWriteSpeed=$DDWriteResult" --form "HDParmDisk=$HDParmDisk" --form "HDParmCached=$HDParmCached" --form "HDParm=$HDParm" --form "fio4kRandRead=$fio4kRandRead" --form "fio4kRandWrite=$fio4kRandWrite" --form "fio4kRandWriteIOPS=$fio4kRandWriteIOPS" --form "fio4kRandReadIOPS=$fio4kRandReadIOPS" --form "fio4kRandWriteSpeed=$fio4kRandWriteSpeed" --form "fio4kRandReadSpeed=$fio4kRandReadSpeed" --form "IOZone=$IOZone" --form "IO4kRandRead=$IO4kRandRead" --form "IO4kRandWrite=$IO4kRandWrite" --form "IO4kRead=$IO4kRead" --form "IO4kWrite=$IO4kWrite" --form "Drive=$BootDrive" --form "Test_hdparm=$Test_hdparm" --form "Test_lsblk=$Test_lsblk" --form "Test_findmnt=$Test_findmnt" --form "Test_lsusb=$Test_lsusb" --form "Test_lshw=<tmplshw" --form "Test_lspci=$Test_lspci" --form "Test_lsscsi=$Test_lsscsi" --form "Test_lscpu=$Test_lscpu" --form "Test_diskbyid=$Test_diskbyid" --form "Test_df=$Test_df" --form "Test_cpuinfo=$Test_cpuinfo" --form "Test_udevadm=<tmpudev" --form "Test_dmesg=<tmpdmesg" --form "Test_fstab=$Test_fstab" --form "Test_inxi=<tmpinxi" --form "Test_hwinfo=<tmphwinfo" --form "Test_dmidecode=<tmpdmi" --form "Test_nvme=$Test_nvme" --form "Test_smartctl=<tmpsmart" --form "Model=$Model" --form "Capacity=$Capacity" --form "Manufacturer=$Manufacturer" --form "Product=$Product" --form "DateManufactured=$DateManufactured" --form "Note=$Brand" --form "Class=$Class" --form "OCR=$OCR" --form "SSR=$SSR" --form "SCR=$SCR" --form "CID=$CID" --form "CSD=$CSD" --form "UserAlias=$UserAlias" --form "HostModel=$HostModel" --form "HostSDClock=$HostSDClock" --form "HostConfig=$HostConfig" --form "HostCPUClock=$HostCPUClock" --form "HostCoreClock=$HostCoreClock" --form "HostRAMClock=$HostRAMClock" --form "HostArchitecture=$HostArchitecture" --form "HostOS=$HostOS" --form "HostOSInfo=$HostOSInfo" --form "HostManufacturer=$HostManufacturer" --form "Test_sdparm=<tmpparm" https://pibenchmarks.com/formtools/process.php)
+Submit=$(curl -s -k -L --form "form_tools_form_id=1" --form "DDTest=$DDWrite" --form "DDWriteSpeed=$DDWriteResult" --form "HDParmDisk=$HDParmDisk" --form "HDParmCached=$HDParmCached" --form "HDParm=$HDParm" --form "fio4kRandRead=$fio4kRandRead" --form "fio4kRandWrite=$fio4kRandWrite" --form "fio4kRandWriteIOPS=$fio4kRandWriteIOPS" --form "fio4kRandReadIOPS=$fio4kRandReadIOPS" --form "fio4kRandWriteSpeed=$fio4kRandWriteSpeed" --form "fio4kRandReadSpeed=$fio4kRandReadSpeed" --form "IOZone=$IOZone" --form "IO4kRandRead=$IO4kRandRead" --form "IO4kRandWrite=$IO4kRandWrite" --form "IO4kRead=$IO4kRead" --form "IO4kWrite=$IO4kWrite" --form "Drive=$BootDrive" --form "Test_hdparm=$Test_hdparm" --form "Test_lsblk=$Test_lsblk" --form "Test_findmnt=$Test_findmnt" --form "Test_lsusb=$Test_lsusb" --form "Test_lshw=<tmplshw" --form "Test_lspci=$Test_lspci" --form "Test_lsscsi=$Test_lsscsi" --form "Test_lscpu=$Test_lscpu" --form "Test_diskbyid=$Test_diskbyid" --form "Test_df=$Test_df" --form "Test_cpuinfo=$Test_cpuinfo" --form "Test_udevadm=<tmpudev" --form "Test_dmesg=<tmpdmesg" --form "Test_fstab=$Test_fstab" --form "Test_inxi=<tmpinxi" --form "Test_hwinfo=<tmphwinfo" --form "Test_dmidecode=<tmpdmi" --form "Test_nvme=$Test_nvme" --form "Test_smartctl=<tmpsmart" --form "Model=$Model" --form "Capacity=$Capacity" --form "Manufacturer=$Manufacturer" --form "Product=$Product" --form "DateManufactured=$DateManufactured" --form "Note=$Brand" --form "Class=$Class" --form "OCR=$OCR" --form "SSR=$SSR" --form "SCR=$SCR" --form "CID=$CID" --form "CSD=$CSD" --form "UserAlias=$UserAlias" --form "HostModel=$HostModel" --form "HostSDClock=$HostSDClock" --form "HostConfig=$HostConfig" --form "HostCPUClock=$HostCPUClock" --form "HostCoreClock=$HostCoreClock" --form "HostRAMClock=$HostRAMClock" --form "HostArchitecture=$HostArchitecture" --form "HostOS=$HostOS" --form "HostOSInfo=$HostOSInfo" --form "HostManufacturer=$HostManufacturer" https://pibenchmarks.com/formtools/process.php)
 rm -rf tmpudev tmpinxi tmplshw tmphwinfo tmpdmi tmpdmsg tmpsmart tmpparm
 SubmitResult=""
 SubmitResult=$(echo "$Submit" | grep submission)
