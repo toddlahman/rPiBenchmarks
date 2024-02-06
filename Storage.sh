@@ -33,11 +33,9 @@ Print_Style() {
   printf "%s\n" "${2}$1${NORMAL}"
 }
 
-su root -c "apk add --no-cache --update lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio xxd perl-xml-libxml fstrim lsblk raspberrypi-utils-vcgencmd dpkg"
-
 # Install apk packages
 Install_apk_Package() {
-
+su root -c "apk add --no-cache --update lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio xxd perl-xml-libxml fstrim lsblk raspberrypi-utils-vcgencmd dpkg"
 #  echo "Install $1"
 #  if [ "$AptUpdated" -ne "1" ]; then
 #    export AptUpdated="1"
@@ -46,6 +44,8 @@ Install_apk_Package() {
 #    apk add lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio xxd perl-xml-libxml fstrim lsblk raspberrypi-utils-vcgencmd
 #  fi
 }
+
+Install_apk_Package()
 
 # Get binary from string
 Get_Binary() {
