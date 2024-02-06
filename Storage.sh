@@ -35,7 +35,7 @@ Print_Style() {
 
 # Install apk packages
 Install_apk_Package() {
-  echo apk add --no-cache --update lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio xxd perl-xml-libxml fstrim lsblk raspberrypi-utils-vcgencmd
+  su root -c "apk add --no-cache --update lshw pciutils usbutils lsscsi bc curl hwinfo hdparm nvme-cli dmidecode smartmontools fio xxd perl-xml-libxml fstrim lsblk raspberrypi-utils-vcgencmd"
 #  echo "Install $1"
 #  if [ "$AptUpdated" -ne "1" ]; then
 #    export AptUpdated="1"
