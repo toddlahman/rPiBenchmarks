@@ -1,4 +1,4 @@
-# WARINGING! NOT READY FOR PRODUCTION USE
+# WARNING! NOT READY FOR PRODUCTION USE
 
 # Linux Storage Benchmarking Script for Home Assistant Operating System (Customized version of Alpine Linux)
 
