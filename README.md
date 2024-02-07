@@ -1,7 +1,3 @@
-# WARNING! NOT READY FOR PRODUCTION USE
-
-# Linux Storage Benchmarking Script for Home Assistant Operating System (Customized version of Alpine Linux)
-
 [![GitHub Release][releases-shield]][releases]
 ![Project Stage][project-stage-shield]
 [![License][license-shield]](LICENSE.md)
@@ -15,6 +11,10 @@
 [![Github Actions][github-actions-shield]][github-actions]
 ![Project Maintenance][maintenance-shield]
 [![GitHub Activity][commits-shield]][commits]
+
+# WARNING! NOT READY FOR PRODUCTION USE
+
+# Linux Storage Benchmarking Script for Home Assistant Operating System (Customized version of Alpine Linux)
 
 <h2>Overview</h2>
 Storage benchmarking script featuring a storage benchmark with a heavy emphasis on random read/write performance (essential for OS / application).  This is far more accurate of a representation of actual performance than simply simulating writing a large file.<br>
